@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111313">
+    <title>WRAP — Shape your next</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --ink: #f1f0e9;
+            --muted: #a4a69e;
+            --lime: #d3ff68;
+            --line: rgba(241, 240, 233, .2);
+            font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        * { box-sizing: border-box; }
+
+        html {
+            background: #111313;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        html::-webkit-scrollbar { display: none; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: #111313;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .wrap { width: 100%; }
+
+        .section {
+            position: relative;
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100svh;
+            overflow: hidden;
+            align-items: center;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            isolation: isolate;
+        }
+
+        .section::before {
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            content: "";
+            pointer-events: none;
+        }
+
+        .inner {
+            width: min(1120px, calc(100% - 96px));
+            margin: 0 auto;
+        }
+
+        .topbar {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            padding: 34px max(48px, calc((100% - 1120px) / 2));
+            font-size: 12px;
+            letter-spacing: .12em;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -.08em;
+        }
+
+        .topbar-note { color: var(--muted); }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 28px;
+            color: var(--lime);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 24px;
+            height: 1px;
+            background: currentColor;
+            content: "";
+        }
+
+        h1, h2, p { margin-top: 0; }
+
+        .hero {
+            background:
+                radial-gradient(ellipse at 75% 48%, rgba(114, 139, 73, .17), transparent 38%),
+                #111313;
+        }
+
+        .hero::before {
+            background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+            background-size: 72px 72px;
+            mask-image: linear-gradient(to right, transparent, black 55%);
+        }
+
+        .hero-content { padding: 72px 0 28px; }
+
+        .hero h1 {
+            max-width: 900px;
+            margin-bottom: 30px;
+            font-size: clamp(58px, 10.8vw, 144px);
+            font-weight: 600;
+            letter-spacing: -.085em;
+            line-height: .91;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: var(--lime);
+        }
+
+        .hero-copy {
+            max-width: 420px;
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .hero-mark {
+            position: absolute;
+            right: max(8%, calc((100% - 1240px) / 2));
+            bottom: 17%;
+            display: grid;
+            width: clamp(130px, 20vw, 260px);
+            aspect-ratio: 1;
+            place-items: center;
+            border: 1px solid rgba(211, 255, 104, .28);
+            border-radius: 50%;
+            color: var(--lime);
+            font-size: clamp(50px, 8vw, 104px);
+            font-weight: 300;
+            letter-spacing: -.13em;
+            transform: rotate(-15deg);
+        }
+
+        .hero-mark::before,
+        .hero-mark::after {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(211, 255, 104, .14);
+            border-radius: 50%;
+            content: "";
+        }
+
+        .hero-mark::after { inset: 28px; }
+
+        .profile { background: #d8dece; color: #171a16; }
+
+        .profile::before {
+            background: radial-gradient(ellipse at 78% 50%, rgba(139, 161, 111, .36), transparent 34%);
+        }
+
+        .profile .eyebrow { color: #526638; }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            align-items: end;
+            gap: 10%;
+        }
+
+        .profile h2, .session h2 {
+            margin-bottom: 0;
+            font-size: clamp(44px, 7vw, 92px);
+            font-weight: 600;
+            letter-spacing: -.075em;
+            line-height: 1.04;
+        }
+
+        .profile h2 span { color: #75885e; }
+
+        .profile-detail {
+            max-width: 390px;
+            padding-bottom: 10px;
+        }
+
+        .profile-detail p {
+            margin-bottom: 28px;
+            color: #54594e;
+            font-size: 16px;
+            line-height: 1.9;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            padding: 9px 13px;
+            border: 1px solid rgba(23, 26, 22, .2);
+            border-radius: 99px;
+            font-size: 11px;
+            letter-spacing: .05em;
+        }
+
+        .session {
+            background:
+                radial-gradient(ellipse at 78% 62%, rgba(93, 105, 165, .16), transparent 36%),
+                #171820;
+        }
+
+        .session::before {
+            background-image: radial-gradient(rgba(255,255,255,.2) .7px, transparent .7px);
+            background-size: 22px 22px;
+            opacity: .22;
+            mask-image: linear-gradient(90deg, transparent, black);
+        }
+
+        .session .eyebrow { color: #a8b2ff; }
+        .session h2 { max-width: 760px; }
+
+        .session h2 span { color: #a8b2ff; }
+
+        .session-bottom {
+            display: flex;
+            max-width: 740px;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 36px;
+            margin-top: 44px;
+        }
+
+        .session-bottom p {
+            max-width: 380px;
+            margin-bottom: 0;
+            color: #a6a7b3;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            min-width: 156px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 15px 18px;
+            border: 1px solid rgba(241, 240, 233, .38);
+            border-radius: 99px;
+            font-size: 12px;
+            transition: color .25s ease, background .25s ease, border-color .25s ease;
+        }
+
+        .contact-link:hover, .contact-link:focus-visible {
+            border-color: var(--lime);
+            color: #111313;
+            background: var(--lime);
+        }
+
+        .page-count {
+            position: absolute;
+            right: max(48px, calc((100% - 1120px) / 2));
+            bottom: 36px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: .12em;
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 34px;
+            left: max(48px, calc((100% - 1120px) / 2));
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 10px;
+            letter-spacing: .12em;
+        }
+
+        .scroll-cue::before {
+            width: 34px;
+            height: 1px;
+            background: currentColor;
+            content: "";
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1);
+        }
+
+        .section.is-visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section.is-visible .reveal-delay { transition-delay: .14s; }
+        .section.is-visible .reveal-late { transition-delay: .28s; }
+
+        @media (max-width: 700px) {
+            .inner { width: calc(100% - 48px); }
+            .topbar { padding: 24px; }
+            .topbar-note { font-size: 10px; }
+            .hero-content { padding-top: 54px; }
+            .hero h1 { font-size: clamp(58px, 16vw, 100px); }
+            .hero-copy { max-width: 310px; font-size: 13px; }
+            .hero-mark { right: 7%; bottom: 14%; opacity: .7; }
+            .profile-grid { grid-template-columns: 1fr; gap: 32px; }
+            .profile h2, .session h2 { font-size: clamp(46px, 12vw, 72px); }
+            .profile-detail { max-width: 420px; }
+            .profile-detail p { margin-bottom: 20px; font-size: 14px; }
+            .session-bottom { align-items: flex-start; flex-direction: column; gap: 22px; margin-top: 30px; }
+            .session-bottom p { font-size: 14px; }
+            .scroll-cue { left: 24px; bottom: 25px; }
+            .page-count { right: 24px; bottom: 25px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#intro" aria-label="WRAP 홈">WRAP<span style="color: var(--lime)">.</span></a>
+        <span class="topbar-note">INDEPENDENT CREATIVE STUDIO · SEOUL</span>
+    </header>
+
+    <main class="wrap">
+        <section class="section hero is-visible" id="intro" aria-labelledby="intro-title">
+            <div class="inner hero-content">
+                <p class="eyebrow reveal">A little different, by design</p>
+                <h1 class="reveal reveal-delay" id="intro-title">Shape your<br><span>next.</span></h1>
+                <p class="hero-copy reveal reveal-late">좋은 아이디어에 감각적인 경험을 더합니다.<br>브랜드의 다음 장면을 함께 만들어가요.</p>
+            </div>
+            <div class="hero-mark" aria-hidden="true">w.</div>
+            <span class="scroll-cue">SCROLL TO EXPLORE</span>
+            <span class="page-count">01 / 03</span>
+        </section>
+
+        <section class="section profile" id="profile" aria-labelledby="profile-title">
+            <div class="inner profile-grid">
+                <div>
+                    <p class="eyebrow reveal">Who we are</p>
+                    <h2 class="reveal reveal-delay" id="profile-title">작은 차이가<br><span>큰 인상을.</span></h2>
+                </div>
+                <div class="profile-detail reveal reveal-late">
+                    <p>WRAP은 브랜드가 가진 고유한 이야기를 발견하고, 오래 기억될 경험으로 연결하는 크리에이티브 스튜디오입니다.</p>
+                    <div class="tag-list" aria-label="주요 서비스">
+                        <span class="tag">BRAND STRATEGY</span>
+                        <span class="tag">DIGITAL EXPERIENCE</span>
+                        <span class="tag">ART DIRECTION</span>
+                    </div>
+                </div>
+            </div>
+            <span class="scroll-cue">KEEP GOING</span>
+            <span class="page-count" style="color: #54594e">02 / 03</span>
+        </section>
+
+        <section class="section session" id="session" aria-labelledby="session-title">
+            <div class="inner">
+                <p class="eyebrow reveal">Let's make it happen</p>
+                <h2 class="reveal reveal-delay" id="session-title">다음 장면을<br><span>함께 만들어요.</span></h2>
+                <div class="session-bottom reveal reveal-late">
+                    <p>새로운 프로젝트와 반가운 협업을 기다립니다.<br>당신의 이야기를 들려주세요.</p>
+                    <a class="contact-link" href="mailto:hello@wrap.studio">프로젝트 문의 <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+            <span class="scroll-cue">BACK TO TOP</span>
+            <a class="page-count" href="#intro" aria-label="맨 위로 이동">03 / 03 ↑</a>
+        </section>
+    </main>
+
+    <script>
+        const sections = document.querySelectorAll(".section");
+        let wheelLocked = false;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                } else {
+                    entry.target.classList.remove("is-visible");
+                }
+            });
+        }, { threshold: 0.55 });
+
+        sections.forEach((section) => observer.observe(section));
+
+        document.addEventListener("wheel", (event) => {
+            if (Math.abs(event.deltaY) < 2) return;
+
+            event.preventDefault();
+            if (wheelLocked) return;
+            wheelLocked = true;
+
+            const currentIndex = Array.from(sections).reduce((closest, section, index) => {
+                const distance = Math.abs(section.getBoundingClientRect().top);
+                return distance < closest.distance ? { index, distance } : closest;
+            }, { index: 0, distance: Infinity }).index;
+            const nextIndex = Math.max(0, Math.min(sections.length - 1, currentIndex + Math.sign(event.deltaY)));
+            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            sections[nextIndex].scrollIntoView({
+                behavior: reducedMotion ? "auto" : "smooth",
+                block: "start"
+            });
+
+            window.setTimeout(() => {
+                wheelLocked = false;
+            }, 850);
+        }, { passive: false });
+    </script>
+</body>
+</html>
